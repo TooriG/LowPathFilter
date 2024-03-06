@@ -32,17 +32,19 @@ st.title("ローパスフィルタアプリ")
 
 uploaded_file = st.file_uploader("画像をアップロードしてください", type=['png', 'jpg', 'jpeg'])
 
-threshold = st.slider("フィルタのしきい値", min_value=1, max_value=100, value=50)
-
 if uploaded_file is not None:
-    image = Image.open(uploaded_file)
-    image = np.array(image)
-
-    if image.shape[2] == 4:  # アルファチャンネルが存在する場合は削除
-        image = image[:, :, :3]
-
-    filtered_image = apply_low_pass_filter(image, threshold)
+    threshold = st.slider("フィルタのしきい値", min_value=1, max_value=1000, value=50)
     
-    # PIL Imageオブジェクトに変換してから表示
-    filtered_image_pil = Image.fromarray(filtered_image)
-    st.image(filtered_image_pil, caption='フィルタ適用後の画像', use_column_width=True)
+    # 実行ボタンを追加
+    if st.button('フィルタをかける'):
+        image = Image.open(uploaded_file)
+        image = np.array(image)
+
+        if image.shape[2] == 4:  # アルファチャンネルが存在する場合は削除
+            image = image[:, :, :3]
+
+        filtered_image = apply_low_pass_filter(image, threshold)
+        
+        # PIL Imageオブジェクトに変換してから表示
+        filtered_image_pil = Image.fromarray(filtered_image)
+        st.image(filtered_image_pil, caption='フィルタ適用後の画像', use_column_width=True)
